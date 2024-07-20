@@ -2,47 +2,39 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
+
+// Set up multer for handling file uploads
 const upload = multer();
 
+// Import routes
 const productRoute = require('./routes/api/productRoute');
 
-// Connecting to the Database
-let mongodb_url = 'mongodb://localhost/';
-let dbName = 'yolomy';
+// Define constants for MongoDB connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://mongo/yolomy';
+const PORT = process.env.PORT || 5000;
 
-// define a url to connect to the database
-const MONGODB_URI = process.env.MONGODB_URI || mongodb_url + dbName
-mongoose.connect(MONGODB_URI,{useNewUrlParser: true, useUnifiedTopology: true  } )
-let db = mongoose.connection;
+// Initialize Express app
+const app = express();
 
-// Check Connection
-db.once('open', ()=>{
-    console.log('Database connected successfully')
-})
+// Middleware
+app.use(express.json());  // Body parser middleware
+app.use(upload.array());  // Multer middleware
+app.use(cors());          // Enable CORS
 
-// Check for DB Errors
-db.on('error', (error)=>{
-    console.log(error);
-})
+// Connect to MongoDB
+mongoose.connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => {
+    console.log('Database connected successfully');
+}).catch((error) => {
+    console.error('Database connection error:', error);
+});
 
-// Initializing express
-const app = express()
+// Use routes
+app.use('/api/products', productRoute);
 
-// Body parser middleware
-app.use(express.json())
-
-// 
-app.use(upload.array()); 
-
-// Cors 
-app.use(cors());
-
-// Use Route
-app.use('/api/products', productRoute)
-
-// Define the PORT
-const PORT = process.env.PORT || 5000
-
-app.listen(PORT, ()=>{
-    console.log(`Server listening on port ${PORT}`)
-})
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});
