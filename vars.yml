@@ -1,0 +1,7 @@
+# vars.yml
+
+app_name: yolo_app
+node_version: "18.x"
+frontend_port: 3000
+backend_port: 5000
+mongodb_version: "5.0"
