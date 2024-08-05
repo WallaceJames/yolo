@@ -9,6 +9,10 @@ Vagrant.configure("2") do |config|
     frontend.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
     end
+    frontend.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yml"
+      ansible.compatibility_mode = "auto" # Use auto compatibility mode
+    end
   end
 
   # Backend Server
@@ -19,6 +23,10 @@ Vagrant.configure("2") do |config|
     backend.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
     end
+    backend.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yml"
+      ansible.compatibility_mode = "auto" # Use auto compatibility mode
+    end
   end
 
   # Database Server
@@ -28,6 +36,10 @@ Vagrant.configure("2") do |config|
     db.vm.network "forwarded_port", guest: 27017, host: 27017
     db.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
+    end
+    db.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yml"
+      ansible.compatibility_mode = "auto" # Use auto compatibility mode
     end
   end
 
@@ -40,11 +52,10 @@ Vagrant.configure("2") do |config|
     nginx.vm.provider "virtualbox" do |vb|
       vb.memory = "512"
     end
-  end
-
-  # Provisioning with Ansible
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "main.yml"
+    nginx.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yml"
+      ansible.compatibility_mode = "auto" # Use auto compatibility mode
+    end
   end
 
 end
