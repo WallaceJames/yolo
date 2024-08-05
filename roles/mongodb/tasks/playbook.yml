@@ -1,0 +1,11 @@
+---
+- name: Install MongoDB
+  ansible.builtin.apt:
+    name: "mongodb={{ mongodb_version }}"
+    state: present
+
+- name: Start MongoDB service
+  ansible.builtin.systemd:
+    name: mongodb
+    state: started
+    enabled: yes

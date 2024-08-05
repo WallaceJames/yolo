@@ -1,0 +1,16 @@
+---
+- name: Install Node.js
+  ansible.builtin.apt:
+    name: "nodejs={{ node_version }}"
+    state: present
+
+- name: Install frontend dependencies
+  ansible.builtin.command:
+    cmd: npm install
+    chdir: /var/www/{{ app_name }}/frontend
+
+- name: Start frontend service
+  ansible.builtin.systemd:
+    name: frontend
+    state: started
+    enabled: yes

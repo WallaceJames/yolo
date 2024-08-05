@@ -1,0 +1,28 @@
+---
+- block:
+    - name: Install MongoDB
+      ansible.builtin.apt:
+        name: "mongodb={{ mongodb_version }}"
+        state: present
+    - name: Start MongoDB service
+      ansible.builtin.systemd:
+        name: mongodb
+        state: started
+        enabled: yes
+  tags: [mongodb]
+
+- block:
+    - name: Install Node.js
+      ansible.builtin.apt:
+        name: "nodejs={{ node_version }}"
+        state: present
+    - name: Install backend dependencies
+      ansible.builtin.command:
+        cmd: npm install
+        chdir: /var/www/{{ app_name }}/backend
+    - name: Start backend service
+      ansible.builtin.systemd:
+        name: backend
+        state: started
+        enabled: yes
+  tags: [backend]
