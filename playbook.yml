@@ -1,0 +1,10 @@
+# playbook.yml
+
+---
+- name: Configure all servers
+  hosts: all
+  become: yes
+  roles:
+    - nginx
+    - backend
+    - mongodb
