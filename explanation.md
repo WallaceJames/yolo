@@ -9,6 +9,9 @@ The Ansible playbook is executed sequentially, with each play targeting specific
 **Function**: 
 - Installs and configures MongoDB on the database server.
 
+**Positioning**:
+- This role is executed first to ensure that MongoDB is up and running before any applications that depend on it are deployed.
+
 **Ansible Modules Used**:
 - `ansible.builtin.apt`: To install MongoDB.
 - `ansible.builtin.systemd`: To ensure MongoDB service is started and enabled.
@@ -19,6 +22,8 @@ The Ansible playbook is executed sequentially, with each play targeting specific
 - Installs and configures the backend application on the backend server.
 - Ensures that Node.js and application dependencies are installed and the backend service is running.
 
+**Positioning**:
+- This role is executed after the MongoDB role to ensure that the backend application can connect to the MongoDB instance.
 
 **Ansible Modules Used**:
 - `ansible.builtin.apt`: To install Node.js.
@@ -31,7 +36,8 @@ The Ansible playbook is executed sequentially, with each play targeting specific
 - Installs and configures the frontend application on the frontend server.
 - Ensures that Node.js and application dependencies are installed, and the frontend service is running.
 
-
+**Positioning**:
+- This role is executed after the backend role to ensure that the frontend application can properly interact with the backend services.
 
 **Ansible Modules Used**:
 - `ansible.builtin.apt`: To install Node.js.
@@ -41,9 +47,10 @@ The Ansible playbook is executed sequentially, with each play targeting specific
 ### 4. Role: `nginx`
 
 **Function**:
-- Configures Nginx as a load balancer.
+- Configures Nginx as a load balancer or reverse proxy.
 - Sets up the Nginx server with appropriate configurations to handle incoming traffic and distribute it to the backend services.
 
+**Positioning**:
 - This role is executed last to ensure that the backend and frontend services are up and running before Nginx is configured to route traffic to them.
 
 **Ansible Modules Used**:
