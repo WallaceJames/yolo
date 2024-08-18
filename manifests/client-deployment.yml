@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: client
 spec:
-  replicas:3
+  replicas: 3
   selector:
     matchLabels:
       app: client
@@ -13,21 +13,27 @@ spec:
         app: client
     spec:
       containers:
-      - name: client
-        image: your-client-image  # Replace with your actual client Docker image
-        ports:
-        - containerPort: 3000
-        env:
-        - name: REACT_APP_BACKEND_URL
-          value: "http://backend:5000"  # Replace with your backend URL
+        - name: client
+          image: your-client-image:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: client
 spec:
-  ports:
-  - port: 3001
-    targetPort: 3000
   selector:
     app: client
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
